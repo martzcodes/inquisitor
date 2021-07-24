@@ -3,6 +3,8 @@ const project = new AwsCdkTypeScriptApp({
   cdkVersion: '2.0.0-rc.14',
   defaultReleaseBranch: 'main',
   name: 'inquisitor',
+  deps: ['aws-lambda', 'aws-sdk'],
+  devDeps: ['esbuild', '@types/aws-lambda'],
 
   // cdkDependencies: undefined,        /* Which AWS CDK modules (those that start with "@aws-cdk/") this app uses. */
   // deps: [],                          /* Runtime dependencies of this module. */
