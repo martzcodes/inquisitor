@@ -45,7 +45,9 @@
     "aws-cdk-lib": "^2.0.0-rc.14",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.953.0",
-    "constructs": "^10.0.5"
+    "constructs": "^10.0.5",
+    "openapi-typescript-codegen": "^0.9.3",
+    "yaml": "^1.10.2"
   },
   "bundledDependencies": [],
   "license": "Apache-2.0",
