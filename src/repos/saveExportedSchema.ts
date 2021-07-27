@@ -16,7 +16,6 @@ export const saveExportedSchema = async (
           SK: `NAME#${SchemaName}#VERSION#${Version}`,
           ...schema,
         },
-        ConditionExpression: 'attribute_not_exists(PK)',
       })
       .promise();
   } catch (e) {

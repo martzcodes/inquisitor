@@ -56,10 +56,15 @@ export const handler = async (
 
     const asyncApi = await getAsyncApi({ tableName });
 
+    const existingChannel = asyncApi.channels[`${jsonContent.title}`] || {};
+    const updatedTags = new Set((existingChannel.publish?.tags || []).map((tag: {name: string}) => tag.name));
+    updatedTags.add(`${jsonContent['x-amazon-events-source']}`);
     asyncApi.channels[
-      `${jsonContent['x-amazon-events-source']}/${jsonContent['x-amazon-events-detail-type']}`
+      `${jsonContent.title}`
     ] = {
+      description: `${jsonContent['x-amazon-events-detail-type']}`,
       publish: {
+        tags: [...updatedTags].map((tag) => ({ name: tag })),
         message: { $ref: `#/components/messages/${jsonContent.title}` },
       },
     };
@@ -135,7 +140,7 @@ export const handler = async (
     const s3 = new S3();
     const putObjectBody = {
       Bucket: `${process.env.API_BUCKET}`,
-      Key: `${asyncApi.info.version}.yml`,
+      Key: 'latest.yml',
       Body: asyncAPIYml.toString(),
     };
     console.log(JSON.stringify(putObjectBody));

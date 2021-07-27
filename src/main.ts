@@ -1,4 +1,4 @@
-import { App, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
+import { App, CfnOutput, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/lib/aws-dynamodb';
 import { EventBus, Rule } from 'aws-cdk-lib/lib/aws-events';
 import { LambdaFunction } from 'aws-cdk-lib/lib/aws-events-targets';
@@ -6,7 +6,8 @@ import { CfnDiscoverer } from 'aws-cdk-lib/lib/aws-eventschemas';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/lib/aws-iam';
 import { Runtime } from 'aws-cdk-lib/lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/lib/aws-lambda-nodejs';
-import { Bucket, BucketAccessControl } from 'aws-cdk-lib/lib/aws-s3';
+import { Bucket, BucketAccessControl, HttpMethods } from 'aws-cdk-lib/lib/aws-s3';
+import { BucketDeployment, Source } from 'aws-cdk-lib/lib/aws-s3-deployment';
 import { Construct } from 'constructs';
 
 export class InquisitorStack extends Stack {
@@ -37,6 +38,14 @@ export class InquisitorStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
       publicReadAccess: true,
+      cors: [
+        {
+          allowedMethods: [HttpMethods.GET, HttpMethods.HEAD],
+          allowedOrigins: ['*'],
+          allowedHeaders: ['*'],
+          exposedHeaders: ['ETag', 'x-amz-meta-custom-header', 'Authorization', 'Content-Type', 'Accept'],
+        },
+      ],
     });
 
     const lambdaProps = {
@@ -52,6 +61,7 @@ export class InquisitorStack extends Stack {
       timeout: Duration.seconds(60),
       environment: {
         API_BUCKET: inquisitorApiBucket.bucketName,
+        INQUISITOR_BUS: bus.eventBusArn,
       },
     });
 
@@ -78,6 +88,32 @@ export class InquisitorStack extends Stack {
     });
 
     rule.addTarget(new LambdaFunction(targetFunction));
+
+    const siteBucket = new Bucket(this, 'SiteBucket', {
+      websiteIndexDocument: 'index.html',
+      websiteErrorDocument: 'error.html',
+      publicReadAccess: true,
+      cors: [
+        {
+          allowedMethods: [HttpMethods.GET, HttpMethods.HEAD],
+          allowedOrigins: ['*'],
+          allowedHeaders: ['*'],
+          exposedHeaders: ['ETag', 'x-amz-meta-custom-header', 'Authorization', 'Content-Type', 'Accept'],
+        },
+      ],
+      removalPolicy: RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+    });
+
+    // Deploy site contents to S3 bucket
+    new BucketDeployment(this, 'BucketDeployment', {
+      sources: [Source.asset('./frontend/build')],
+      destinationBucket: siteBucket,
+    });
+
+    new CfnOutput(this, 'bucketWebsiteUrl', {
+      value: siteBucket.bucketWebsiteUrl,
+    });
   }
 }
 

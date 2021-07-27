@@ -48,7 +48,7 @@
           "spawn": "test:compile"
         },
         {
-          "spawn": "eslint"
+          "exec": "react-scripts test --watchAll=false"
         }
       ]
     },
@@ -57,16 +57,13 @@
       "description": "Full release build (test+compile)",
       "steps": [
         {
-          "exec": "npx projen"
-        },
-        {
           "spawn": "test"
         },
         {
           "spawn": "compile"
         },
         {
-          "spawn": "synth"
+          "exec": "react-scripts build"
         }
       ]
     },
@@ -84,7 +81,7 @@
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @types/aws-lambda @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk esbuild eslint eslint-import-resolver-node eslint-import-resolver-typescript eslint-plugin-import json-schema npm-check-updates ts-node typescript @aws-cdk/assert aws-cdk-lib aws-lambda aws-sdk constructs openapi-typescript-codegen yaml"
+          "exec": "yarn upgrade @testing-library/jest-dom @testing-library/react @testing-library/user-event @types/jest @types/node @types/react @types/react-dom npm-check-updates typescript @asyncapi/react-component axios react react-dom react-scripts web-vitals"
         },
         {
           "exec": "npx projen"
@@ -129,48 +126,21 @@
         }
       ]
     },
-    "eslint": {
-      "name": "eslint",
-      "description": "Runs eslint against the codebase",
+    "dev": {
+      "name": "dev",
+      "description": "Starts the react application",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern src test build-tools .projenrc.js"
+          "exec": "react-scripts start"
         }
       ]
     },
-    "synth": {
-      "name": "synth",
-      "description": "Synthesizes your cdk app into cdk.out (part of \"yarn build\")",
+    "eject": {
+      "name": "eject",
+      "description": "Ejects your React application from react-scripts",
       "steps": [
         {
-          "exec": "cdk synth"
-        }
-      ]
-    },
-    "deploy": {
-      "name": "deploy",
-      "description": "Deploys your CDK app to the AWS cloud",
-      "steps": [
-        {
-          "exec": "cdk deploy"
-        }
-      ]
-    },
-    "destroy": {
-      "name": "destroy",
-      "description": "Destroys your cdk app in the AWS cloud",
-      "steps": [
-        {
-          "exec": "cdk destroy"
-        }
-      ]
-    },
-    "diff": {
-      "name": "diff",
-      "description": "Diffs the currently deployed app against your code",
-      "steps": [
-        {
-          "exec": "cdk diff"
+          "exec": "react-scripts eject"
         }
       ]
     }
