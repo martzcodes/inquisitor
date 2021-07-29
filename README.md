@@ -43,24 +43,18 @@ It took about 5 minutes for the schema to be discovered...
 Let's send some variations...
 
 ```bash
-aws events put-events --entries '[{"Source": "mystore","DetailType": "Review Updated","EventBusName":"inquisitorBus","Detail": "{\"star_rating\": 5,  \"description\": \"The size and length fit me well and the design is fun. I felt very secure wearing this tshirt. \",  \"helpful_count\": 34,  \"unhelpful_count\": 1,  \"pros\": [\"lightweight\",\"fits well\"  ],  \"cons\": [],  \"customer\": {\"name\": \"Julian Wood\",\"email\": \"julianreview@amazon.com\",\"phone\": \"+1 604 123 1234\"  },  \"product\": {\"product_id\": 788032119674292922,\"title\": \"Encrypt Everything Tshirt\",\"sku\": \"encrypt-everything-tshirt\",\"inventory_id\": 23190823132,\"size\": \"medium\",\"taxable\": true}}"}]'
-```
+aws events put-events --entries '[{"Source": "accountA","DetailType": "review","EventBusName":"inquisitorBus","Detail": "{\"star_rating\": 5,  \"description\": \"The size and length fit me well and the design is fun. I felt very secure wearing this tshirt. \"}"}]'
 
-```bash
-aws events put-events --entries '[{"Source": "myOtherStore","DetailType": "Review Created","EventBusName":"inquisitorBus","Detail": "{\"star_rating\": 5,  \"description\": \"The size and length fit me well and the design is fun. I felt very secure wearing this tshirt. \",  \"helpful_count\": 34,  \"unhelpful_count\": 1,  \"pros\": [\"lightweight\",\"fits well\"  ],  \"cons\": [],  \"customer\": {\"name\": \"Julian Wood\",\"email\": \"julianreview@amazon.com\",\"phone\": \"+1 604 123 1234\"  },  \"product\": {\"product_id\": 788032119674292922,\"title\": \"Encrypt Everything Tshirt\",\"sku\": \"encrypt-everything-tshirt\",\"inventory_id\": 23190823132,\"size\": \"medium\",\"taxable\": true,\"image_url\": \"https://img.mystore.test/encrypt-tshirt.jpg\",\"weight\": 200.0}}"}]'
-```
+aws events put-events --entries '[{"Source": "accountB","DetailType": "customer","EventBusName":"inquisitorBus","Detail": "{\"star_rating\": 5,  \"description\": \"The size and length fit me well and the design is fun. I felt very secure wearing this tshirt. \", \"unhelpful_count\": 1,  \"pros\": [\"lightweight\",\"fits well\"  ],  \"cons\": [],  \"customer\": {\"name\": \"Matt Martz\",\"email\": \"someemail@example.com\",\"phone\": \"+1 604 123 1234\"  },  \"product\": {\"product_id\": 788032119674292922,\"title\": \"Encrypt Everything Tshirt\",\"sku\": \"encrypt-everything-tshirt\",\"size\": \"medium\"}}"}]'
 
-```bash
-aws events put-events --entries '[{"Source": "mystore","DetailType": "Review Created","EventBusName":"inquisitorBus","Detail": "{\"star_rating\": 5,  \"helpful_count\": 34,  \"unhelpful_count\": 1,  \"pros\": [\"lightweight\",\"fits well\"  ],  \"cons\": [],  \"customer\": {\"name\": \"Julian Wood\",\"email\": \"julianreview@amazon.com\",\"phone\": \"+1 604 123 1234\"  },  \"product\": {\"product_id\": 788032119674292922,\"title\": \"Encrypt Everything Tshirt\",\"sku\": \"encrypt-everything-tshirt\",\"inventory_id\": 23190823132,\"size\": \"medium\",\"taxable\": true,\"image_url\": \"https://img.mystore.test/encrypt-tshirt.jpg\"}}"}]'
-```
+aws events put-events --entries '[{"Source": "accountB","DetailType": "review","EventBusName":"inquisitorBus","Detail": "{\"star_rating\": 4,  \"description\": \"The sizasdfasdfasdfell and the design is fun. I felt vasdfafasdng this tshirt. \"}"}]'
 
-```bash
-aws events put-events --entries '[{"Source": "mystore","DetailType": "Review Created","EventBusName":"inquisitorBus","Detail": "{\"helpful_count\": 34,  \"unhelpful_count\": 1, \"customer\": {\"name\": \"Julian Wood\",\"email\": \"julianreview@amazon.com\",\"phone\": \"+1 604 123 1234\"  },  \"product\": {\"product_id\": 788032119674292922,\"sku\": \"encrypt-everything-tshirt\",\"inventory_id\": 23190823132,\"taxable\": true,\"image_url\": \"https://img.mystore.test/encrypt-tshirt.jpg\"}}"}]'
-```
+aws events put-events --entries '[{"Source": "accountC","DetailType": "review","EventBusName":"inquisitorBus","Detail": "{\"star_rating\": 5,  \"description\": \"The size and length fit me well and the design is fun. I felt very secure wearing this tshirt. \"}"}]'
 
+aws events put-events --entries '[{"Source": "accountC","DetailType": "purchase","EventBusName":"inquisitorBus","Detail": "{\"purchaseCost\": 5.0,  \"someField\": \"someField details here? \"}"}]'
 
-```bash
-aws events put-events --entries '[{"Source": "mystore","DetailType": "Review Created","EventBusName":"inquisitorBus","Detail": "{\"helpful_count\": 34}"}]'
+aws events put-events --entries '[{"Source": "accountA","DetailType": "purchase","EventBusName":"inquisitorBus","Detail": "{\"purchaseCost\": 45.55,  \"someField\": \"asdfasdfasdf? \"}"}]'
+
 ```
 
 There seems to be a fairly consistent several minute lag between events and discovery.  I also wanted to see if it was smart enough to infer optional properties between events (it's not).  It does store the multiple versions of the schemas though... so you could re-combine them.  I suppose the best practice in this case would be to have a consistent event structure and if you need optional parameters, have different event detail types?
@@ -130,3 +124,7 @@ Part 2 will involve:
 * Publishing a npm library with the TypeScript interfaces for these events
 
 Something along those lines...
+
+## Part 2 notes
+
+Looks like the schema registry doesn't care where the event source is from... so if multiple places use the same event it'll pick up the first (unless theres a change in payload).

@@ -1,0 +1,161 @@
+info:
+  title: Inquisitor
+  version: 0.0.4
+  description: >-
+    Inquisitor is a CDK-based app that uses EventBridge Schema Registry with
+    Event Discovery to build a self-documenting Event API.
+            Any events that are forwarded to the inquisitor event bus, arn:aws:events:us-east-1:359317520455:event-bus/inquisitorBus, will get identified and documented.
+            From there a npm library will be created for the TypeScript interfaces of the discovered schemas.
+            Over time the system will infer optional properties and possibly make recommendations for how to improve your event schema.
+asyncapi: 2.1.0
+channels:
+  Customer:
+    description: customer
+    publish:
+      message:
+        $ref: "#/components/messages/Customer"
+      tags:
+        - name: accountB
+  Review:
+    description: review
+    publish:
+      message:
+        $ref: "#/components/messages/Review"
+      tags:
+        - name: accountA
+  Purchase:
+    description: purchase
+    publish:
+      tags:
+        - name: accountC
+      message:
+        $ref: "#/components/messages/Purchase"
+components:
+  messages:
+    Customer:
+      name: Customer
+      description: 'Emitted by: {"sources":["accountB"]}'
+      title: "accountB: Customer"
+      payload:
+        $ref: "#/components/schemas/Customer"
+    Review:
+      name: Review
+      description: 'Emitted by: {"sources":["accountA"]}'
+      title: "accountA: Review"
+      payload:
+        $ref: "#/components/schemas/Review"
+    Purchase:
+      name: Purchase
+      description: 'Emitted by: {"sources":["accountC"]}'
+      title: "accountC: Purchase"
+      payload:
+        $ref: "#/components/schemas/Purchase"
+  schemas:
+    Product:
+      description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+      id: Product
+      type: object
+      properties:
+        size:
+          type: string
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        sku:
+          type: string
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        title:
+          type: string
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        product_id:
+          format: int64
+          type: integer
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+      required:
+        - size
+        - product_id
+        - sku
+        - title
+    Customer_1:
+      description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+      id: Customer_1
+      type: object
+      properties:
+        name:
+          type: string
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        phone:
+          type: string
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        email:
+          type: string
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+      required:
+        - phone
+        - name
+        - email
+    Review:
+      description: '{"firstSeen":"2021-07-27T03:55:02Z","firstVersion":"1","lastSeen":"2021-07-27T03:55:02Z","lastVersion":"1"}'
+      id: Review
+      type: object
+      properties:
+        description:
+          type: string
+          description: '{"firstSeen":"2021-07-27T03:55:02Z","firstVersion":"1","lastSeen":"2021-07-27T03:55:02Z","lastVersion":"1"}'
+        star_rating:
+          type: number
+          description: '{"firstSeen":"2021-07-27T03:55:02Z","firstVersion":"1","lastSeen":"2021-07-27T03:55:02Z","lastVersion":"1"}'
+      required:
+        - star_rating
+        - description
+    Customer:
+      description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+      id: Customer
+      type: object
+      properties:
+        product:
+          $ref: "#/components/schemas/Product"
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        pros:
+          type: array
+          items:
+            type: string
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        star_rating:
+          type: number
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        unhelpful_count:
+          type: number
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        description:
+          type: string
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        cons:
+          type: array
+          items:
+            type: object
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+        customer:
+          $ref: "#/components/schemas/Customer_1"
+          description: '{"firstSeen":"2021-07-27T04:01:06Z","firstVersion":"1","lastSeen":"2021-07-27T04:01:06Z","lastVersion":"1"}'
+      required:
+        - product
+        - pros
+        - star_rating
+        - unhelpful_count
+        - description
+        - cons
+        - customer
+    Purchase:
+      properties:
+        purchaseCost:
+          format: double
+          type: number
+          description: '{"firstSeen":"2021-07-27T04:04:03Z","firstVersion":"1","lastSeen":"2021-07-27T04:04:03Z","lastVersion":"1"}'
+        someField:
+          type: string
+          description: '{"firstSeen":"2021-07-27T04:04:03Z","firstVersion":"1","lastSeen":"2021-07-27T04:04:03Z","lastVersion":"1"}'
+      required:
+        - purchaseCost
+        - someField
+      type: object
+      id: Purchase
+      description: '{"firstSeen":"2021-07-27T04:04:03Z","firstVersion":"1","lastSeen":"2021-07-27T04:04:03Z","lastVersion":"1"}'
