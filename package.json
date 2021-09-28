@@ -18,27 +18,27 @@
     "start": "npx projen start"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.80",
+    "@types/aws-lambda": "^8.10.83",
     "@types/node": "^10.17.0",
-    "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "@typescript-eslint/parser": "^4.28.4",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
     "aws-cdk": "^2.0.0-rc.14",
-    "esbuild": "^0.12.15",
-    "eslint": "^7.31.0",
-    "eslint-import-resolver-node": "^0.3.4",
-    "eslint-import-resolver-typescript": "^2.4.0",
-    "eslint-plugin-import": "^2.23.4",
+    "esbuild": "^0.13.2",
+    "eslint": "^7.32.0",
+    "eslint-import-resolver-node": "^0.3.6",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.24.2",
     "json-schema": "^0.3.0",
     "npm-check-updates": "^11",
     "projen": "^0.27.6",
     "ts-node": "^9",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.3"
   },
   "dependencies": {
     "@aws-cdk/assert": "^2.0.0-rc.14",
     "aws-cdk-lib": "^2.0.0-rc.14",
     "aws-lambda": "^1.0.6",
-    "aws-sdk": "^2.953.0",
+    "aws-sdk": "^2.996.0",
     "constructs": "^10.0.5",
     "openapi-typescript-codegen": "^0.9.3",
     "yaml": "^1.10.2"
